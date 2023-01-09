@@ -13,9 +13,9 @@
 
 // if on a Mac, don't need glew.h and the <GL/ should be <OpenGL/
 
-#include "glew.h"
-#include <GL/gl.h>
-#include <GL/glu.h>
+// #include "glew.h"
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
 #include "glut.h"
 #include <map>
 #include <stdarg.h>
