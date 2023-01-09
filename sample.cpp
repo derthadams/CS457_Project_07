@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <iostream>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -244,7 +245,6 @@ main( int argc, char *argv[ ] )
 
 	glutInit( &argc, argv );
 
-
 	// setup all the graphics stuff:
 
 	InitGraphics( );
@@ -264,6 +264,10 @@ main( int argc, char *argv[ ] )
 	// setup all the user interface stuff:
 
 	InitMenus( );
+
+	// print supported OpenGL version to the console
+
+	std::cout << "OpenGL Version Supported: " << glGetString(GL_VERSION) << std::endl;
 
 
 	// draw the scene once and wait for some interaction:
