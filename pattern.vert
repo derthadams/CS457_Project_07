@@ -18,7 +18,7 @@ main( )
 	vST = gl_MultiTexCoord0.st;
 	vec3 vert = gl_Vertex.xyz;
 	vec3 norm = normalize( vert );
-	vert += AMP * norm * cos( 2.*PI*W*(uTime-vST.s) ) * sin( 2.*PI*W*(uTime-vST.t) );
+	// vert += AMP * norm * cos( 2.*PI*W*(uTime-vST.s) ) * sin( 2.*PI*W*(uTime-vST.t) );
 	vec4 ECposition = gl_ModelViewMatrix * vec4( vert, 1. );
 	vN = normalize( gl_NormalMatrix * gl_Normal );	// normal vector
 	vL = LightPosition - ECposition.xyz;		// vector from the point

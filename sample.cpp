@@ -219,9 +219,10 @@ void	InitGraphics( );
 void	InitLists( );
 void	InitMenus( );
 void	Keyboard( unsigned char, int, int );
-void	MjbSphere( float, int, int );
+// void	MjbSphere( float, int, int );
 void	MouseButton( int, int, int, int );
 void	MouseMotion( int, int );
+void	OsuSphere( float radius, int slices, int stacks );
 void	Reset( );
 void	Resize( int, int );
 void	Visibility( int );
@@ -751,19 +752,20 @@ InitLists( )
 	SphereList = glGenLists( 1 );
 	float rgb[3] = { 1., 1., 1. };
 	glNewList( SphereList, GL_COMPILE );
-		glMaterialfv( GL_BACK,  GL_AMBIENT,    MulArray3( .4f, White ) );
-		glMaterialfv( GL_BACK,  GL_DIFFUSE,    MulArray3( 1.f, White ) );
-		glMaterialfv( GL_BACK,  GL_SPECULAR,   Array3( 0., 0., 0. ) );
-		glMaterialf (  GL_BACK,  GL_SHININESS, 3. );
-		glMaterialfv( GL_BACK,  GL_EMISSION,   Array3( 0., 0., 0. ) );
+		// glMaterialfv( GL_BACK,  GL_AMBIENT,    MulArray3( .4f, White ) );
+		// glMaterialfv( GL_BACK,  GL_DIFFUSE,    MulArray3( 1.f, White ) );
+		// glMaterialfv( GL_BACK,  GL_SPECULAR,   Array3( 0., 0., 0. ) );
+		// glMaterialf (  GL_BACK,  GL_SHININESS, 3. );
+		// glMaterialfv( GL_BACK,  GL_EMISSION,   Array3( 0., 0., 0. ) );
 
-		glMaterialfv( GL_FRONT, GL_AMBIENT,    MulArray3( 1.f, rgb ) );
-		glMaterialfv( GL_FRONT, GL_DIFFUSE,    MulArray3( 1.f, rgb ) );
-		glMaterialfv( GL_FRONT, GL_SPECULAR,   MulArray3( .7f, White ) );
-		glMaterialf ( GL_FRONT, GL_SHININESS,  8. );
-		glMaterialfv( GL_FRONT, GL_EMISSION,   Array3( 0., 0., 0. ) );
+		// glMaterialfv( GL_FRONT, GL_AMBIENT,    MulArray3( 1.f, rgb ) );
+		// glMaterialfv( GL_FRONT, GL_DIFFUSE,    MulArray3( 1.f, rgb ) );
+		// glMaterialfv( GL_FRONT, GL_SPECULAR,   MulArray3( .7f, White ) );
+		// glMaterialf ( GL_FRONT, GL_SHININESS,  8. );
+		// glMaterialfv( GL_FRONT, GL_EMISSION,   Array3( 0., 0., 0. ) );
 
-		MjbSphere( 1.3f, 72, 72 );
+		// MjbSphere( 1.3f, 72, 72 );
+		OsuSphere(2.f, 72, 72);
 	glEndList( );
 
 
@@ -1213,5 +1215,5 @@ MulArray3( float factor, float array0[3] )
 	return array;
 }
 
-#include "sphere.cpp"
+#include "osusphere.cpp"
 #include "glslprogramP5.cpp"
