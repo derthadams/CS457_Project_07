@@ -1,10 +1,8 @@
 #version 120
 
 uniform float   uKa, uKd, uKs;		// coefficients of each type of lighting
-uniform vec3  uColor;			// object color
 uniform vec3  uSpecularColor;		// light color
 uniform float   uShininess;		// specular exponent
-uniform float uS0, uT0, uDs, uDt;		// rectangular pattern
 uniform sampler2D uTexUnit;
 
 varying  vec2  vST;			// texture coords

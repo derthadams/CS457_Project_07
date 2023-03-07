@@ -184,11 +184,9 @@ float	Color[3];
 int		DebugOn;				// != 0 means to print debugging info
 int		DepthCueOn;				// != 0 means to use intensity depth cueing
 bool	Distort;
-// float	Ds, Dt;
 bool	Freeze;
 int		MainWindow;				// window id for main graphics window
 GLSLProgram	*Pattern;
-// float		S0, T0;
 float	Scale;					// scaling factor
 GLuint	SphereList;				// object display list
 unsigned char* Texture;
@@ -208,7 +206,6 @@ void	Animate( );
 unsigned char * BmpToTexture( char *filename, int *width, int *height );
 void	Display( );
 void	DoAxesMenu( int );
-// void	DoChangeMenu( int );
 void	DoColorMenu( int );
 void	DoDepthMenu( int );
 void	DoDebugMenu( int );
@@ -415,25 +412,19 @@ Display( )
 
 	// enable the shader:
 
-	// S0 = 0.5f;
-	// T0 = 0.5f;
-	// Ds = 0.4f;
-	// Dt = 0.2f;
 	Pattern->Use( );
 	glActiveTexture(GL_TEXTURE6);
 	glBindTexture(GL_TEXTURE_2D, WorldTex);
 	Pattern->SetUniformVariable( "uTexUnit", 6);
 	Pattern->SetUniformVariable( "uKa", 0.1f );
-	Pattern->SetUniformVariable( "uKd", 0.6f );
-	Pattern->SetUniformVariable( "uKs", 0.3f );
+	Pattern->SetUniformVariable( "uKd", 0.8f );
+	Pattern->SetUniformVariable( "uKs", 0.1f );
 	Pattern->SetUniformVariable( "uSpecularColor", 1.f, 1.f, 1.f );
-	Pattern->SetUniformVariable( "uShininess", 8.f );
-	Pattern->SetUniformVariable( "uColor",  1.f, .5f, 0.f );
+	Pattern->SetUniformVariable( "uShininess", 2.f );
 	Pattern->SetUniformVariable( "uDistort", Distort );
 	Pattern->SetUniformVariable( "uTime",  Time );
 
 	// draw the current object:
-
 	glCallList( SphereList );
 	Pattern->Use( 0 );
 
@@ -452,16 +443,6 @@ DoAxesMenu( int id )
 	glutPostRedisplay( );
 }
 
-
-// void
-// DoChangeMenu( int id )
-// {
-// 	ChangeVertices  = (id & 1 ) != 0;
-// 	ChangeFragments = (id & 2 ) != 0;
-
-// 	glutSetWindow( MainWindow );
-// 	glutPostRedisplay( );
-// }
 
 void
 DoDistortMenu( int id )
@@ -919,14 +900,14 @@ void
 Reset( )
 {
 	ActiveButton = 0;
-	AxesOn = 1;
+	AxesOn = 0;
 	DebugOn = 0;
 	DepthCueOn = 0;
 	Distort = false;
 	Freeze = false;
 	Scale  = 1.0;
 	WhichColor = WHITE;
-	WhichProjection = PERSP;
+	WhichProjection = ORTHO;
 	Xrot = Yrot = 0.;
 }
 
