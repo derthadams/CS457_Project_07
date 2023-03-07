@@ -17,12 +17,13 @@ void
 main( )
 { 
 	float amp;
+	float offTime = mod(uTime + 0.5, 1.f);
 	vST = gl_MultiTexCoord0.st;
 
 	if( uDistort ) {
 		amp = 0.125 * sin(2. * PI * uTime - (PI / 2.)) + 0.125;
-		vST.s += amp * cos( 2.*PI*W*(uTime-vST.s) ) * sin( 2.*PI*W*(uTime-vST.t) );
-		vST.t -= amp * cos( 2.*PI*W*(uTime-vST.s) ) * sin( 2.*PI*W*(uTime-vST.t) );
+		vST.s += amp * cos( 2.*PI*W*(uTime-vST.s) ) * sin( 2.*PI*W*(offTime-vST.t) );
+		vST.t -= amp * cos( 2.*PI*W*(offTime-vST.s) ) * sin( 2.*PI*W*(uTime-vST.t) );
 	}
 	
 	vec3 vert = gl_Vertex.xyz;
