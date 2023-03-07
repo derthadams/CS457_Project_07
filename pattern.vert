@@ -10,24 +10,23 @@ varying  vec3  vE;		// vector from point to eye
 
 vec3 LightPosition = vec3(  -5., 5., 5. );
 
-const float AMP = 0.2;
 const float PI = 3.14159265;
 const float W = 2.;
 
 void
 main( )
 { 
+	float amp;
 	vST = gl_MultiTexCoord0.st;
 
 	if( uDistort ) {
-		vST += AMP * cos( 2.*PI*W*(uTime-vST.s) ) * sin( 2.*PI*W*(uTime-vST.t) );
+		amp = 0.125 * sin(2. * PI * uTime - (PI / 2.)) + 0.125;
+		vST.s += amp * cos( 2.*PI*W*(uTime-vST.s) ) * sin( 2.*PI*W*(uTime-vST.t) );
+		vST.t -= amp * cos( 2.*PI*W*(uTime-vST.s) ) * sin( 2.*PI*W*(uTime-vST.t) );
 	}
-	
-
 	
 	vec3 vert = gl_Vertex.xyz;
 	vec3 norm = normalize( vert );
-	// vert += AMP * norm * cos( 2.*PI*W*(uTime-vST.s) ) * sin( 2.*PI*W*(uTime-vST.t) );
 	vec4 ECposition = gl_ModelViewMatrix * vec4( vert, 1. );
 	vN = normalize( gl_NormalMatrix * gl_Normal );	// normal vector
 	vL = LightPosition - ECposition.xyz;		// vector from the point
