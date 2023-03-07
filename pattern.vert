@@ -1,6 +1,8 @@
 #version 120
 
 uniform float	uTime;
+uniform bool 	uDistort;
+
 varying  vec2  vST;		// texture coords
 varying  vec3  vN;		// normal vector
 varying  vec3  vL;		// vector from point to light
@@ -16,6 +18,13 @@ void
 main( )
 { 
 	vST = gl_MultiTexCoord0.st;
+
+	if( uDistort ) {
+		vST += AMP * cos( 2.*PI*W*(uTime-vST.s) ) * sin( 2.*PI*W*(uTime-vST.t) );
+	}
+	
+
+	
 	vec3 vert = gl_Vertex.xyz;
 	vec3 norm = normalize( vert );
 	// vert += AMP * norm * cos( 2.*PI*W*(uTime-vST.s) ) * sin( 2.*PI*W*(uTime-vST.t) );

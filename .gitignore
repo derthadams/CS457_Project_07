@@ -3,3 +3,4 @@ bin/
 .vscode
 *.a
 *.o
+glsllog.txt

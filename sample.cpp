@@ -180,16 +180,15 @@ const GLfloat FOGEND      = { 4. };
 int		ActiveButton;			// current button that is down
 GLuint	AxesList;				// list to hold the axes
 int		AxesOn;					// != 0 means to draw the axes
-bool	ChangeFragments;
-bool	ChangeVertices;
-float		Color[3];
+float	Color[3];
 int		DebugOn;				// != 0 means to print debugging info
 int		DepthCueOn;				// != 0 means to use intensity depth cueing
-float		Ds, Dt;
+bool	Distort;
+// float	Ds, Dt;
 bool	Freeze;
 int		MainWindow;				// window id for main graphics window
 GLSLProgram	*Pattern;
-float		S0, T0;
+// float		S0, T0;
 float	Scale;					// scaling factor
 GLuint	SphereList;				// object display list
 unsigned char* Texture;
@@ -209,10 +208,11 @@ void	Animate( );
 unsigned char * BmpToTexture( char *filename, int *width, int *height );
 void	Display( );
 void	DoAxesMenu( int );
-void	DoChangeMenu( int );
+// void	DoChangeMenu( int );
 void	DoColorMenu( int );
 void	DoDepthMenu( int );
 void	DoDebugMenu( int );
+void	DoDistortMenu( int );
 void	DoMainMenu( int );
 void	DoProjectMenu( int );
 void	DoRasterString( float, float, float, char * );
@@ -415,10 +415,10 @@ Display( )
 
 	// enable the shader:
 
-	S0 = 0.5f;
-	T0 = 0.5f;
-	Ds = 0.4f;
-	Dt = 0.2f;
+	// S0 = 0.5f;
+	// T0 = 0.5f;
+	// Ds = 0.4f;
+	// Dt = 0.2f;
 	Pattern->Use( );
 	glActiveTexture(GL_TEXTURE6);
 	glBindTexture(GL_TEXTURE_2D, WorldTex);
@@ -428,23 +428,9 @@ Display( )
 	Pattern->SetUniformVariable( "uKs", 0.3f );
 	Pattern->SetUniformVariable( "uSpecularColor", 1.f, 1.f, 1.f );
 	Pattern->SetUniformVariable( "uShininess", 8.f );
-
-	Pattern->SetUniformVariable( "uS0", S0);
-	Pattern->SetUniformVariable( "uT0", T0 );
-
-	if( ChangeFragments )
-	{
-		Pattern->SetUniformVariable( "uDs", Ds*(float)(.5+.5*sin(2.*M_PI*Time)) );
-		Pattern->SetUniformVariable( "uDt", Dt*(float)(.5+.5*cos(2.*M_PI*Time)) );
-	}
-
 	Pattern->SetUniformVariable( "uColor",  1.f, .5f, 0.f );
-
-	if( ChangeVertices )
-	{
-		Pattern->SetUniformVariable( "uTime",  Time );
-	}
-
+	Pattern->SetUniformVariable( "uDistort", Distort );
+	Pattern->SetUniformVariable( "uTime",  Time );
 
 	// draw the current object:
 
@@ -467,11 +453,20 @@ DoAxesMenu( int id )
 }
 
 
+// void
+// DoChangeMenu( int id )
+// {
+// 	ChangeVertices  = (id & 1 ) != 0;
+// 	ChangeFragments = (id & 2 ) != 0;
+
+// 	glutSetWindow( MainWindow );
+// 	glutPostRedisplay( );
+// }
+
 void
-DoChangeMenu( int id )
+DoDistortMenu( int id )
 {
-	ChangeVertices  = (id & 1 ) != 0;
-	ChangeFragments = (id & 2 ) != 0;
+	Distort = id;
 
 	glutSetWindow( MainWindow );
 	glutPostRedisplay( );
@@ -610,11 +605,9 @@ InitMenus( )
 		glutAddMenuEntry( ColorNames[i], i );
 	}
 
-	int changemenu = glutCreateMenu( DoChangeMenu );
-	glutAddMenuEntry( "No Shader Changes",  0 );
-	glutAddMenuEntry( "Vertex Shader Changes Only",   1 );
-	glutAddMenuEntry( "Fragment Shader Changes Only",   2 );
-	glutAddMenuEntry( "Vertex + Fragment Shader Changes",   1|2 );
+	int distortmenu = glutCreateMenu( DoDistortMenu );
+	glutAddMenuEntry( "Off",  0 );
+	glutAddMenuEntry( "On",   1 );	
 
 	int axesmenu = glutCreateMenu( DoAxesMenu );
 	glutAddMenuEntry( "Off",  0 );
@@ -633,7 +626,7 @@ InitMenus( )
 	glutAddMenuEntry( "Perspective",   PERSP );
 
 	int mainmenu = glutCreateMenu( DoMainMenu );
-	glutAddSubMenu(   "Shaders",       changemenu);
+	glutAddSubMenu(   "Distort",       distortmenu);
 	glutAddSubMenu(   "Axes",          axesmenu);
 	glutAddSubMenu(   "Colors",        colormenu);
 	glutAddSubMenu(   "Depth Cue",     depthcuemenu);
@@ -927,9 +920,9 @@ Reset( )
 {
 	ActiveButton = 0;
 	AxesOn = 1;
-	ChangeFragments = ChangeVertices = false;
 	DebugOn = 0;
 	DepthCueOn = 0;
+	Distort = false;
 	Freeze = false;
 	Scale  = 1.0;
 	WhichColor = WHITE;
