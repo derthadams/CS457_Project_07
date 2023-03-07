@@ -6,7 +6,7 @@ varying  vec3  vN;		// normal vector
 varying  vec3  vL;		// vector from point to light
 varying  vec3  vE;		// vector from point to eye
 
-vec3 LightPosition = vec3(  0., 5., 5. );
+vec3 LightPosition = vec3(  -5., 5., 5. );
 
 const float AMP = 0.2;
 const float PI = 3.14159265;

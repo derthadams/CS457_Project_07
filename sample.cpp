@@ -187,14 +187,16 @@ int		DebugOn;				// != 0 means to print debugging info
 int		DepthCueOn;				// != 0 means to use intensity depth cueing
 float		Ds, Dt;
 bool	Freeze;
-GLuint	SphereList;				// object display list
 int		MainWindow;				// window id for main graphics window
 GLSLProgram	*Pattern;
 float		S0, T0;
 float	Scale;					// scaling factor
+GLuint	SphereList;				// object display list
+unsigned char* Texture;
 float	Time;
 int		WhichColor;				// index into Colors[ ]
 int		WhichProjection;		// ORTHO or PERSP
+unsigned int WorldTex;
 int		Xmouse, Ymouse;			// mouse values
 float	Xrot, Yrot;				// rotation angles in degrees
 
@@ -204,6 +206,7 @@ float	White[ ] = { 1.,1.,1.,1. };
 // function prototypes:
 
 void	Animate( );
+unsigned char * BmpToTexture( char *filename, int *width, int *height );
 void	Display( );
 void	DoAxesMenu( int );
 void	DoChangeMenu( int );
@@ -219,10 +222,11 @@ void	InitGraphics( );
 void	InitLists( );
 void	InitMenus( );
 void	Keyboard( unsigned char, int, int );
-// void	MjbSphere( float, int, int );
 void	MouseButton( int, int, int, int );
 void	MouseMotion( int, int );
 void	OsuSphere( float radius, int slices, int stacks );
+int		ReadInt( FILE *fp );
+short	ReadShort( FILE *fp );
 void	Reset( );
 void	Resize( int, int );
 void	Visibility( int );
@@ -416,6 +420,9 @@ Display( )
 	Ds = 0.4f;
 	Dt = 0.2f;
 	Pattern->Use( );
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, WorldTex);
+	Pattern->SetUniformVariable( "uTexUnit", 6);
 	Pattern->SetUniformVariable( "uKa", 0.1f );
 	Pattern->SetUniformVariable( "uKd", 0.6f );
 	Pattern->SetUniformVariable( "uKs", 0.3f );
@@ -733,6 +740,22 @@ InitGraphics( )
 		fprintf( stderr, "Shader created.\n" );
 	}
 	Pattern->SetVerbose( false );
+
+	int width, height;
+	Texture = BmpToTexture( (char *)"worldtex.bmp", &width, &height );
+	if( Texture == NULL )
+			fprintf( stderr, "Cannot open texture '%s'\n", "worldtex.bmp" );
+	else
+			fprintf( stderr, "Width = %d ; Height = %d\n", width, height );
+
+	glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+	glGenTextures( 1, &WorldTex );
+	glBindTexture( GL_TEXTURE_2D, WorldTex );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D( GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, Texture );
 }
 
 
@@ -752,20 +775,7 @@ InitLists( )
 	SphereList = glGenLists( 1 );
 	float rgb[3] = { 1., 1., 1. };
 	glNewList( SphereList, GL_COMPILE );
-		// glMaterialfv( GL_BACK,  GL_AMBIENT,    MulArray3( .4f, White ) );
-		// glMaterialfv( GL_BACK,  GL_DIFFUSE,    MulArray3( 1.f, White ) );
-		// glMaterialfv( GL_BACK,  GL_SPECULAR,   Array3( 0., 0., 0. ) );
-		// glMaterialf (  GL_BACK,  GL_SHININESS, 3. );
-		// glMaterialfv( GL_BACK,  GL_EMISSION,   Array3( 0., 0., 0. ) );
-
-		// glMaterialfv( GL_FRONT, GL_AMBIENT,    MulArray3( 1.f, rgb ) );
-		// glMaterialfv( GL_FRONT, GL_DIFFUSE,    MulArray3( 1.f, rgb ) );
-		// glMaterialfv( GL_FRONT, GL_SPECULAR,   MulArray3( .7f, White ) );
-		// glMaterialf ( GL_FRONT, GL_SHININESS,  8. );
-		// glMaterialfv( GL_FRONT, GL_EMISSION,   Array3( 0., 0., 0. ) );
-
-		// MjbSphere( 1.3f, 72, 72 );
-		OsuSphere(2.f, 72, 72);
+		OsuSphere(1.3f, 72, 72);
 	glEndList( );
 
 
@@ -1217,3 +1227,4 @@ MulArray3( float factor, float array0[3] )
 
 #include "osusphere.cpp"
 #include "glslprogramP5.cpp"
+#include "bmptotexture.cpp"

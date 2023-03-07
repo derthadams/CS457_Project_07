@@ -5,6 +5,7 @@ uniform vec3  uColor;			// object color
 uniform vec3  uSpecularColor;		// light color
 uniform float   uShininess;		// specular exponent
 uniform float uS0, uT0, uDs, uDt;		// rectangular pattern
+uniform sampler2D uTexUnit;
 
 varying  vec2  vST;			// texture coords
 varying  vec3  vN;			// normal vector
@@ -19,12 +20,7 @@ main( )
 	vec3 Light     = normalize(vL);
 	vec3 Eye        = normalize(vE);
 
-	vec3 myColor = uColor;
-	if(	uS0-uDs/2. <= vST.s  &&  vST.s <= uS0+uDs/2.  && 
-		uT0-uDt/2. <= vST.t  &&  vST.t <= uT0+uDt/2.  )
-	{
-			myColor = vec3( 1., 0., 0. );
-	}
+	vec3 myColor = texture2D( uTexUnit, vST ).rgb;
 
 	vec3 ambient = uKa * myColor;
 
