@@ -416,8 +416,8 @@ Display( )
 	glActiveTexture(GL_TEXTURE6);
 	glBindTexture(GL_TEXTURE_2D, WorldTex);
 	Pattern->SetUniformVariable( "uTexUnit", 6);
-	Pattern->SetUniformVariable( "uKa", 0.1f );
-	Pattern->SetUniformVariable( "uKd", 0.8f );
+	Pattern->SetUniformVariable( "uKa", 0.2f );
+	Pattern->SetUniformVariable( "uKd", 0.7f );
 	Pattern->SetUniformVariable( "uKs", 0.1f );
 	Pattern->SetUniformVariable( "uSpecularColor", 1.f, 1.f, 1.f );
 	Pattern->SetUniformVariable( "uShininess", 2.f );
